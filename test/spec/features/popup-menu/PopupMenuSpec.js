@@ -37,7 +37,10 @@ describe('features/popup-menu', function() {
     offset = offset || 100;
 
     TestHelper.getBpmnJS().invoke(function(bpmnReplace){
-      bpmnReplace.openChooser({ x: element.x + offset, y: element.y + offset }, element);
+      var x = element.x + offset,
+          y = element.y + offset;
+
+      bpmnReplace.openChooser({ x: x, y: y, cursor: { x: x, y: y } }, element);
     });
   };
 
