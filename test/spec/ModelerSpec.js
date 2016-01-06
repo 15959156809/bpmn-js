@@ -4,6 +4,7 @@ var Modeler = require('../../lib/Modeler');
 
 var TestContainer = require('mocha-test-container-support');
 
+
 describe('Modeler', function() {
 
   var container;
@@ -22,7 +23,7 @@ describe('Modeler', function() {
   }
 
 
-  it('should import simple process', function(done) {
+  it.only('should import simple process', function(done) {
     var xml = require('../fixtures/bpmn/simple.bpmn');
     createModeler(xml, done);
   });

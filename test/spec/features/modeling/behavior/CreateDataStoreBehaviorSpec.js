@@ -1,6 +1,7 @@
 'use strict';
 
 var TestHelper = require('../../../../TestHelper');
+
 /* global bootstrapModeler, inject */
 
 var is = require('../../../../../lib/util/ModelUtil').is;
@@ -9,16 +10,16 @@ var modelingModule = require('../../../../../lib/features/modeling'),
     coreModule = require('../../../../../lib/core');
 
 
-describe('features/modeling/behavior - data objects -', function() {
+describe('features/modeling/behavior - create data store' function() {
 
   var testModules = [ coreModule, modelingModule ];
 
   var rootShape;
 
 
-  describe('DataObjectReference', function() {
+  describe('DataStoreReference', function() {
 
-    var processDiagramXML = require('./CreateDataObjectBehavior.data-object-reference.bpmn');
+    var processDiagramXML = require('./CreateDataStoreBehavior.bpmn');
 
     beforeEach(bootstrapModeler(processDiagramXML, { modules: testModules }));
 
@@ -33,7 +34,7 @@ describe('features/modeling/behavior - data objects -', function() {
     it('should create the corresponding DataObject', inject(function(modeling) {
 
       // when
-      var dataObjectRefShape = modeling.createShape({ type: 'bpmn:DataObjectReference' },
+      var dataObjectRefShape = modeling.createShape({ type: 'bpmn:DataStoreReference' },
         { x: 220, y: 220 }, rootShape);
 
       var dataObject = dataObjectRefShape.businessObject.dataObjectRef;
@@ -51,9 +52,9 @@ describe('features/modeling/behavior - data objects -', function() {
     it('should have the right parents', inject(function(modeling) {
 
       // when
-      var dataObjectRefShape1 = modeling.createShape({ type: 'bpmn:DataObjectReference' },
+      var dataObjectRefShape1 = modeling.createShape({ type: 'bpmn:DataStoreReference' },
         { x: 220, y: 220 }, rootShape);
-      var dataObjectRefShape2 = modeling.createShape({ type: 'bpmn:DataObjectReference' },
+      var dataObjectRefShape2 = modeling.createShape({ type: 'bpmn:DataStoreReference' },
         { x: 380, y: 220 }, subProcess1);
 
       var dataObject1 = dataObjectRefShape1.businessObject.dataObjectRef;
@@ -81,7 +82,7 @@ describe('features/modeling/behavior - data objects -', function() {
 
     beforeEach(inject(function(canvas, elementRegistry) {
       rootShape = canvas.getRootElement();
-      dataObjectRefShape1 = elementRegistry.get('DataObjectReference_1');
+      dataObjectRefShape1 = elementRegistry.get('DataStoreReference_1');
       taskShape = elementRegistry.get('Task_1');
     }));
 
