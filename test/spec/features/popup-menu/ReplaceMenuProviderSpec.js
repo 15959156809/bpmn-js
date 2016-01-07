@@ -961,7 +961,8 @@ describe('features/replace-menu', function() {
       it('should replace SequenceFlow with DefaultFlow -> undo',
         inject(function(elementRegistry, popupMenu, commandStack) {
         // given
-        var sequenceFlow = elementRegistry.get('SequenceFlow_3');
+        var sequenceFlow = elementRegistry.get('SequenceFlow_3'),
+            gateway = elementRegistry.get('ExclusiveGateway_1');
 
         // when
         openPopup(sequenceFlow);
@@ -972,8 +973,6 @@ describe('features/replace-menu', function() {
         entries[0].action();
 
         commandStack.undo();
-
-        var gateway = elementRegistry.get('ExclusiveGateway_1');
 
         // then
         expect(gateway.businessObject.default).to.not.exist;
@@ -1166,6 +1165,57 @@ describe('features/replace-menu', function() {
         // then
         expect(exclusiveGateway.businessObject.default).to.equal(sequenceFlow.businessObject);
       }));
+
+
+      it('should remove any conditionExpression when morphing to DefaultFlow',
+        inject(function(elementRegistry, modeling, popupMenu, moddle) {
+        // given
+        var sequenceFlow = elementRegistry.get('SequenceFlow_3'),
+            exclusiveGateway = elementRegistry.get('ExclusiveGateway_1');
+
+        var conditionExpression = moddle.create('bpmn:FormalExpression', { body: '' });
+
+        modeling.updateProperties(sequenceFlow, { conditionExpression: conditionExpression });
+
+        // when
+        openPopup(sequenceFlow);
+
+        var entries = getEntries(popupMenu);
+
+        // trigger DefaultFlow replacement
+        entries[0].action();
+
+        // then
+        expect(exclusiveGateway.businessObject.default).to.equal(sequenceFlow.businessObject);
+        expect(sequenceFlow.businessObject.conditionExpression).to.not.exist;
+      }));
+
+
+      it('should remove any conditionExpression when morphing to DefaultFlow -> undo',
+        inject(function(elementRegistry, modeling, popupMenu, moddle, commandStack) {
+        // given
+        var sequenceFlow = elementRegistry.get('SequenceFlow_3'),
+            exclusiveGateway = elementRegistry.get('ExclusiveGateway_1');
+
+        var conditionExpression = moddle.create('bpmn:FormalExpression', { body: '' });
+
+        modeling.updateProperties(sequenceFlow, { conditionExpression: conditionExpression });
+
+        // when
+        openPopup(sequenceFlow);
+
+        var entries = getEntries(popupMenu);
+
+        // trigger DefaultFlow replacement
+        entries[0].action();
+
+        commandStack.undo();
+
+        // then
+        expect(exclusiveGateway.businessObject.default).to.not.exist;
+        expect(sequenceFlow.businessObject.conditionExpression).to.equal(conditionExpression);
+      }));
+
     });
 
 
